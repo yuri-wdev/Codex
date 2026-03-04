@@ -22,6 +22,6 @@ https://trello.com/b/Wqn5Fyke/projeto-ifba
 
 #### Colaboradores:
 
-- Yuri Sacramento
-- Jessica Aragão
+- Yuri Aragão
+- Jessica Sacramento
 - Alex Ramos
