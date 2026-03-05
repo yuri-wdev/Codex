@@ -14,8 +14,8 @@ body {
 }
 
 .main-header {
-    background: var(--django-dark);
-    color: #ffc;
+    background: #1e3c72;
+    color: white;
     padding: 10px 40px;
 }
 
