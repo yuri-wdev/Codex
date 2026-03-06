@@ -19,4 +19,4 @@ def dashboard(request):
         'emprestimos_ativos': emprestimos_ativos,
     }
 
-    return render(request, "criando/criando.html", context)
+    return render(request, "dashboard/dashboard.html", context)
