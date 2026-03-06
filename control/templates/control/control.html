@@ -451,8 +451,8 @@
     <!-- TOP BAR -->
     <div class="topbar">
         <div class="topbar-logo">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
             </svg>
             Codex
         </div>
@@ -464,7 +464,8 @@
         <div class="page-header">
             <h1>Gerenciamento</h1>
             <div>
-                <button id="return">Voltar</button>
+                <button id="return" onclick="window.location.href='{% url 'dashboard' %}'">Voltar</button>
+
             </div>
         </div>
 
@@ -551,21 +552,38 @@
     <div class="modal-overlay" id="modal-adicionar">
         <div class="modal">
             <h2>Adicionar Livro</h2>
-            <label>Título</label>
-            <input type="text" id="add-titulo" placeholder="Nome do livro" />
-            <label>Autor</label>
-            <input type="text" id="add-autor" placeholder="Nome do autor" />
-            <label>Ano</label>
-            <input type="number" id="add-ano" placeholder="2024" />
-            <label>Gênero</label>
-            <input type="text" id="add-genero" placeholder="Romance, Ficção..." />
-            <div class="modal-actions">
-                <button class="btn btn-cancel" data-close="modal-adicionar">Cancelar</button>
-                <button class="btn btn-primary" id="confirm-adicionar">Adicionar</button>
-            </div>
+
+            <form method="POST" action="{% url 'salvar_livro' %}">
+                {% csrf_token %}
+
+                <label>Título</label>
+                <input type="text" id="add-titulo" name="titulo" placeholder="Nome do livro" required />
+
+                <label>Autor</label>
+                <input type="text" id="add-autor" name="autor" placeholder="Nome do autor" required />
+
+                <label>Ano</label>
+                <input type="number" id="add-ano" name="ano" placeholder="2024" required />
+
+                <label>Gênero</label>
+                <input type="text" id="add-genero" name="genero" placeholder="Romance, Ficção..." required />
+
+                <label>Sinopse</label>
+                <input type="text" id="add-sinopse" name="sinopse" placeholder="Resumo do livro" required />
+
+                <label>Quantidade</label>
+                <input type="number" id="add-quantidade" name="quantidade" placeholder="1" required />
+
+                <div class="modal-actions">
+                    <!-- IMPORTANTE: cancelar não pode submeter -->
+                    <button type="button" class="btn btn-cancel" data-close="modal-adicionar">Cancelar</button>
+
+                    <!-- Esse aqui envia o POST para a URL -->
+                    <button type="submit" class="btn btn-primary" id="confirm-adicionar">Adicionar</button>
+                </div>
+            </form>
         </div>
     </div>
-
     <!-- MODAL: EDITAR (seleção) -->
     <div class="modal-overlay" id="modal-editar-lista">
         <div class="modal">
@@ -578,32 +596,80 @@
     </div>
 
     <!-- MODAL: EDITAR (formulário) -->
-    <div class="modal-overlay" id="modal-editar-form">
+    <div class="modal-overlay" id="modal-editar">
         <div class="modal">
             <h2>Editar Livro</h2>
-            <label>Título</label><input type="text" id="edit-titulo" />
-            <label>Autor</label><input type="text" id="edit-autor" />
-            <label>Ano</label><input type="number" id="edit-ano" />
-            <label>Gênero</label><input type="text" id="edit-genero" />
+
+            <!-- Formulário com URL correta e campo hidden para o ID -->
+            <form method="POST" action="{% url 'editar_livro' %}">
+                {% csrf_token %}
+
+                <!-- Campo oculto para o ID do livro -->
+                <input type="hidden" id="edit-id" name="id_do_livro">
+
+                <label>Título</label>
+                <input type="text" id="edit-titulo" name="titulo" placeholder="Nome do livro" required />
+
+                <label>Autor</label>
+                <input type="text" id="edit-autor" name="autor" placeholder="Nome do autor" required />
+
+                <label>Ano</label>
+                <input type="number" id="edit-ano" name="ano" placeholder="2024" required />
+
+                <label>Gênero</label>
+                <input type="text" id="edit-genero" name="genero" placeholder="Romance, Ficção..." required />
+
+                <label>Sinopse</label>
+                <input type="text" id="edit-sinopse" name="sinopse" placeholder="Resumo do livro" required />
+
+                <label>Quantidade</label>
+                <input type="number" id="edit-quantidade" name="quantidade" placeholder="1" required />
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" data-close="modal-editar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- MODAL: REMOVER -->
+    <!-- 1. MODAL DE SELEÇÃO (Aparece a lista de livros) -->
+    <div class="modal-overlay" id="modal-remover-lista">
+        <div class="modal">
+            <h2>Selecionar Livro para Remover</h2>
+            <div class="book-list" id="list-remover"></div>
             <div class="modal-actions">
-                <button class="btn btn-cancel" data-close="modal-editar-form">Cancelar</button>
-                <button class="btn btn-primary" id="confirm-editar">Salvar</button>
+                <button type="button" class="btn btn-cancel" data-close="modal-remover-lista">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: REMOVER -->
-    <div class="modal-overlay" id="modal-remover">
+    <!-- 2. MODAL DE CONFIRMAÇÃO (Onde você clica em "Confirmar") -->
+    <div class="modal-overlay" id="modal-remover-confirm">
         <div class="modal">
-            <h2>Remover Livro</h2>
-            <p class="modal-hint">Selecione o livro que deseja excluir do acervo.</p>
-            <div class="book-list" id="list-remover"></div>
-            <div class="modal-actions">
-                <button class="btn btn-cancel" data-close="modal-remover">Cancelar</button>
-                <button class="btn btn-danger" id="confirm-remover">Remover</button>
+            <h2>Confirmar Remoção</h2>
+            <p class="modal-hint">Tem certeza que deseja excluir este livro do acervo?</p>
+
+            <div id="remover-info"
+                style="margin-bottom: 20px; padding: 10px; background: #f9fafb; border-radius: 7px; border: 1px solid #e5e7eb;">
+                <!-- O JS vai escrever o nome do livro aqui -->
             </div>
+
+            <form method="POST" action="{% url 'remover_livro' %}">
+                {% csrf_token %}
+                <!-- Campo escondido que leva o ID para o Django -->
+                <input type="hidden" id="id-remover-input" name="id_do_livro">
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" data-close="modal-remover-confirm">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Confirmar e Remover</button>
+                </div>
+            </form>
         </div>
     </div>
+
+
+
 
     <!-- MODAL: NOVO EMPRÉSTIMO -->
     <div class="modal-overlay" id="modal-novo-emprestimo">
@@ -639,12 +705,9 @@
 
     <script>
         // ─── STATE ───────────────────────────────────────────────
-        let books = [
-            { id: 1, titulo: 'Dom Quixote', autor: 'Cervantes', ano: 1605, genero: 'Aventura', emprestado: false },
-            { id: 2, titulo: 'Grande Sertão: Veredas', autor: 'Guimarães Rosa', ano: 1956, genero: 'Romance', emprestado: true, tomador: 'João Silva', devolucao: '2026-03-20' },
-            { id: 3, titulo: 'O Alquimista', autor: 'Paulo Coelho', ano: 1988, genero: 'Ficção', emprestado: false },
-        ];
-        let nextId = 4, selectedBook = null;
+
+        let books = {{ livros_js| safe }};
+        let nextId = Math.max(...books.map(b => b.id), 0) + 1, selectedBook = null;
 
         // ─── TABS ────────────────────────────────────────────────
         document.querySelectorAll('.tab').forEach(tab => {
@@ -657,12 +720,15 @@
         });
 
         // ─── TOAST ───────────────────────────────────────────────
+
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2500);
         }
-
+        {% for message in messages %}
+        showToast("{{ message|escapejs }}");
+        {% endfor %}
         // ─── MODALS ──────────────────────────────────────────────
         function openModal(id) { document.getElementById(id).classList.add('open'); }
         function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -690,33 +756,69 @@
             ['add-titulo', 'add-autor', 'add-ano', 'add-genero'].forEach(id => document.getElementById(id).value = '');
             openModal('modal-adicionar');
         });
-        document.getElementById('confirm-adicionar').addEventListener('click', () => {
-            const titulo = document.getElementById('add-titulo').value.trim();
-            if (!titulo) { document.getElementById('add-titulo').focus(); return; }
-            const autor = document.getElementById('add-autor').value.trim();
-            const ano = document.getElementById('add-ano').value.trim();
-            const genero = document.getElementById('add-genero').value.trim();
-            books.push({ id: nextId++, titulo, autor, ano, genero, emprestado: false });
-            closeModal('modal-adicionar');
-            showToast('📚 Livro "' + titulo + '" adicionado!');
-        });
+
+
 
         // ─── EDITAR ──────────────────────────────────────────────
         document.getElementById('btn-editar').addEventListener('click', () => {
             const list = document.getElementById('list-editar');
             list.innerHTML = '';
-            if (!books.length) { list.innerHTML = '<p style="color:#9ca3af;font-size:14px">Nenhum livro no acervo.</p>'; }
-            else books.forEach(b => list.appendChild(createBookItem(b, () => {
-                selectedBook = b;
-                closeModal('modal-editar-lista');
-                document.getElementById('edit-titulo').value = b.titulo;
-                document.getElementById('edit-autor').value = b.autor;
-                document.getElementById('edit-ano').value = b.ano;
-                document.getElementById('edit-genero').value = b.genero;
-                openModal('modal-editar-form');
-            })));
+            if (!books.length) {
+                list.innerHTML = '<p style="color:#9ca3af;font-size:14px">Nenhum livro no acervo.</p>';
+            } else {
+                books.forEach(b => list.appendChild(createBookItem(b, () => {
+                    // Preenche o modal de edição com os dados do livro
+                    document.getElementById('edit-id').value = b.id;
+                    document.getElementById('edit-titulo').value = b.titulo;
+                    document.getElementById('edit-autor').value = b.autor;
+                    document.getElementById('edit-ano').value = b.ano;
+                    document.getElementById('edit-genero').value = b.genero;
+                    document.getElementById('edit-sinopse').value = b.sinopse || '';
+                    document.getElementById('edit-quantidade').value = b.quantidade || 1;
+
+                    // Fecha o modal da lista e abre o modal de edição
+                    closeModal('modal-editar-lista');
+                    openModal('modal-editar');
+                })));
+            }
             openModal('modal-editar-lista');
         });
+        // ─── LÓGICA DE REMOVER ──────────────────────────────────
+        document.getElementById('btn-remover').addEventListener('click', () => {
+            const list = document.getElementById('list-remover');
+            list.innerHTML = '';
+
+            // 'books' é a variável que recebe {{ livros_js|safe }} no topo do script
+            if (!books || books.length === 0) {
+                list.innerHTML = '<p style="color:#9ca3af;font-size:14px;text-align:center;padding:20px;">Nenhum livro no acervo para remover.</p>';
+            } else {
+                books.forEach(b => {
+                    // Cria cada item da lista usando sua função createBookItem
+                    const item = createBookItem(b, () => {
+                        // Ao clicar no livro da lista:
+
+                        // 1. Mostra o nome do livro no modal de confirmação
+                        document.getElementById('remover-info').innerHTML = `
+                    <span style="font-size:14px; color:#374151;">
+                        <strong>Título:</strong> ${b.titulo}<br>
+                        <strong>Autor:</strong> ${b.autor}
+                    </span>
+                `;
+
+                        // 2. Coloca o ID do livro no input hidden do formulário
+                        document.getElementById('id-remover-input').value = b.id;
+
+                        // 3. Fecha a lista e abre a confirmação
+                        closeModal('modal-remover-lista');
+                        openModal('modal-remover-confirm');
+                    });
+                    list.appendChild(item);
+                });
+            }
+            openModal('modal-remover-lista');
+        });
+
+
         document.getElementById('confirm-editar').addEventListener('click', () => {
             if (!selectedBook) return;
             selectedBook.titulo = document.getElementById('edit-titulo').value.trim() || selectedBook.titulo;
@@ -728,29 +830,6 @@
             selectedBook = null;
         });
 
-        // ─── REMOVER ─────────────────────────────────────────────
-        document.getElementById('btn-remover').addEventListener('click', () => {
-            selectedBook = null;
-            const list = document.getElementById('list-remover');
-            list.innerHTML = '';
-            if (!books.length) { list.innerHTML = '<p style="color:#9ca3af;font-size:14px">Nenhum livro no acervo.</p>'; }
-            else books.forEach(b => {
-                const item = createBookItem(b, () => {
-                    document.querySelectorAll('#list-remover .book-item').forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected'); selectedBook = b;
-                });
-                list.appendChild(item);
-            });
-            openModal('modal-remover');
-        });
-        document.getElementById('confirm-remover').addEventListener('click', () => {
-            if (!selectedBook) return;
-            const nome = selectedBook.titulo;
-            books = books.filter(b => b.id !== selectedBook.id);
-            closeModal('modal-remover');
-            showToast('🗑️ Livro "' + nome + '" removido!');
-            selectedBook = null;
-        });
 
         // ─── NOVO EMPRÉSTIMO ──────────────────────────────────────
         document.getElementById('btn-novo-emprestimo').addEventListener('click', () => {

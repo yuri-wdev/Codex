@@ -21,15 +21,15 @@
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-label">QUANTIDADE DE LIVROS: </span>
+                    <span class="stat-label">QUANTIDADE DE LIVROS: {{ total_livros }} </span>
                     <span class="stat-value"></span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">QUANTIDADE DE CÓPIAS: </span>
+                    <span class="stat-label">QUANTIDADE DE CÓPIAS: {{ total_copias }} </span>
                     <span class="stat-value"></span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">EMPRÉSTIMOS ATIVOS: </span>
+                    <span class="stat-label">EMPRÉSTIMOS ATIVOS: {{ emprestimos_ativos }} </span>
                     <span class="stat-value"></span>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     <div class="search-bar">
                         <input type="text" id="searchInput" placeholder="Digite o título, código ou ano: ">
                     </div>
-                    <button class="btn-add">Controle</button>
+                    <button class="btn-add" onclick="window.location.href='{% url 'controle' %}'">Controle</button>
                 </div>
 
 
@@ -63,15 +63,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for livro in livros %}
                             <tr>
-                                <td class="campos">One Hundred Years of Solitude</td>
-                                <td class="campos">Gabriel García Márquez</td>
-                                <td class="campos">978-0060883287</td>
-                                <td class="campos">Fiction</td>
-                                <td class="campos">1967</td>
-                                <td class="campos">3</td>
-                                <td class="campos"><button>+</button></td>
+                                <td>{{ livro.titulo }}</td>
+                                <td>{{ livro.autor }}</td>
+                                <td>{{ livro.id }}</td>
+                                <td>{{ livro.categoria }}</td>
+                                <td>{{ livro.ano_lancamento }}</td>
+                                <td>{{ livro.quantidade_total }}</td>
+                                <td>{{ livro.sinopse }}</td>
                             </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -90,13 +92,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for emprestimo in emprestimos %}
                             <tr>
-                                <td class="campos"></td>
-                                <td class="campos"></td>
-                                <td class="campos"></td>
-                                <td class="campos"></td>
-                                <td class="campos"></td>
+                               
+                                <td>{{ emprestimo.cliente }}</td>
+                                <td>{{ emprestimo.livro }}</td>
+                                <td>{{ emprestimo.data_emprestimo }}</td>
+                                <td>{{ emprestimo.data_devolucao }}</td>
+                                <td>{{ emprestimo.status }}</td>
+                                
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
