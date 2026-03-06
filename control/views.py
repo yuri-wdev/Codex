@@ -1,50 +1,50 @@
 from django.shortcuts import render, redirect
-from .models import Livro
+from dashboard.models import Livros, Emprestimo, Cliente
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 @login_required
 def control(request):
-    nexid=Livro().get_next_id()
-
-    livros = Livro.objects.all()
+    livros = Livros.objects.all()
 
     livros_js = [
         {
-            'id': livro.id,
+            'id': livro.codigo,
             'titulo': livro.titulo,
             'autor': livro.autor,
-            'ano': livro.ano_lancamento or 0, 
-            'genero': livro.categoria or '',
-            'quantidade': livro.quantidade_total or 0,
-            'sinopse': livro.sinopse or ''
+            'genero': livro.genero or '',
+            'quantidade': livro.quantidade or 0,
         }
         for livro in livros
     ]
 
     context = {
-        'nexid': nexid,
         'livros': livros,
         'livros_js': livros_js
     }
 
-    return render(request,"control/control.html", context)
+    return render(request, "control/control.html", context)
+
 
 @login_required
 def salvar_livro(request):
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
         autor = request.POST.get('autor')
-        categoria = request.POST.get('genero')
-        publicacao = request.POST.get('ano')
+        genero = request.POST.get('genero')
         quantidade = request.POST.get('quantidade')
-        sinopse = request.POST.get('sinopse')
 
-        Livro().adicionar_livro(titulo, autor, categoria, publicacao, quantidade, sinopse)
+        Livros.objects.create(
+            titulo=titulo,
+            autor=autor,
+            genero=genero,
+            quantidade=quantidade,
+        )
         messages.success(request, f'📚 Livro "{titulo}" adicionado!')
         return redirect('controle')
 
-    return redirect('controle') 
+    return redirect('controle')
+
 
 @login_required
 def editar_livro(request):
@@ -52,25 +52,74 @@ def editar_livro(request):
         livro_id = request.POST.get('id_do_livro')
         titulo = request.POST.get('titulo')
         autor = request.POST.get('autor')
-        categoria = request.POST.get('genero')
-        publicacao = request.POST.get('ano')
+        genero = request.POST.get('genero')
         quantidade = request.POST.get('quantidade')
-        sinopse = request.POST.get('sinopse')
 
-        Livro().editar_livro(livro_id, titulo, autor, categoria, publicacao, quantidade, sinopse)
-        messages.success(request, f'✏️ Livro "{titulo}" atualizado!')
-        return redirect('controle')  # Redireciona após editar
+        try:
+            livro = Livros.objects.get(codigo=livro_id)
+            if titulo:    livro.titulo    = titulo
+            if autor:     livro.autor     = autor
+            if genero:    livro.genero    = genero
+            if quantidade: livro.quantidade = quantidade
+            livro.save()
+            messages.success(request, f'✏️ Livro "{livro.titulo}" atualizado!')
+        except Livros.DoesNotExist:
+            messages.error(request, '❌ Livro não encontrado.')
 
-    return redirect('controle')  # Se não for POST, volta para control
-    
+    return redirect('controle')
+
+
 @login_required
 def remover_livro(request):
     if request.method == 'POST':
         id_livro = request.POST.get('id_do_livro')
-        if id_livro:
-            try:
-                Livro().remover_livro(id_livro)
-                messages.success(request, '🗑️ Livro removido com sucesso!')
-            except Exception as e:
-                messages.error(request, '❌ Erro ao remover livro.')
+        try:
+            livro = Livros.objects.get(codigo=id_livro)
+            livro.delete()
+            messages.success(request, '🗑️ Livro removido com sucesso!')
+        except Livros.DoesNotExist:
+            messages.error(request, '❌ Livro não encontrado.')
+
+    return redirect('controle')
+
+
+@login_required
+def salvar_emprestimo(request):
+    if request.method == 'POST':
+        codigo_livro = request.POST.get('codigo_livro')
+        idcliente = request.POST.get('idcliente')
+        data_emprestimo = request.POST.get('data_emprestimo')
+        data_devolucao = request.POST.get('data_devolucao')
+
+        try:
+            cliente = Cliente.objects.get(idcliente=idcliente)
+            Emprestimo.objects.create(
+                codigo_livro=codigo_livro,
+                idcliente=cliente,
+                data_emprestimo=data_emprestimo,
+                data_devolucao=data_devolucao,
+                status='Ativo'
+            )
+            messages.success(request, '📖 Empréstimo registrado com sucesso!')
+        except Cliente.DoesNotExist:
+            messages.error(request, '❌ Cliente não encontrado.')
+        except Exception as e:
+            messages.error(request, f'❌ Erro: {e}')
+
+    return redirect('controle')
+
+
+@login_required
+def devolver_emprestimo(request):
+    if request.method == 'POST':
+        idemprestimo = request.POST.get('idemprestimo')
+
+        try:
+            emp = Emprestimo.objects.get(idemprestimo=idemprestimo)
+            emp.status = 'Devolvido'
+            emp.save()
+            messages.success(request, '✅ Devolução registrada com sucesso!')
+        except Emprestimo.DoesNotExist:
+            messages.error(request, '❌ Empréstimo não encontrado.')
+
     return redirect('controle')
