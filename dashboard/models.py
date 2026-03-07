@@ -9,9 +9,9 @@ from django.db import models
 
 
 class Cliente(models.Model):
-    idcliente = models.AutoField(db_column='idCliente', primary_key=True, blank=True, null=False)  # Field name made lowercase.
-    nome = models.TextField(db_column='Nome', blank=True, null=False)  # Field name made lowercase.
-    cpf = models.TextField(db_column='CPF', blank=True, null=False)  # Field name made lowercase.
+    idcliente = models.AutoField(db_column='idCliente', primary_key=True, blank=True, null=False)  
+    nome = models.TextField(db_column='Nome', blank=True, null=False) 
+    cpf = models.TextField(db_column='CPF', blank=True, null=False) 
 
     class Meta:
         managed = False
@@ -19,10 +19,10 @@ class Cliente(models.Model):
 
 
 class Emprestimo(models.Model):
-    idemprestimo = models.AutoField(db_column='idEmprestimo', primary_key=True, blank=True, null=False)  # Field name made lowercase.
-    idcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='idCliente')  # Field name made lowercase.
-    status = models.TextField(db_column='Status', blank=True, null=False)  # Field name made lowercase.
-    codigo_livro = models.TextField(db_column='Codigo_livro', blank=True, null=False)  # Field name made lowercase.
+    idemprestimo = models.AutoField(db_column='idEmprestimo', primary_key=True, blank=True, null=False) 
+    idcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='idCliente')  
+    status = models.TextField(db_column='Status', blank=True, null=False)  
+    codigo_livro = models.TextField(db_column='Codigo_livro', blank=True, null=False)  
     data_devolucao = models.TextField(blank=True, null=False)
     data_emprestimo = models.TextField(blank=True, null=False)
     quantidade = models.TextField(blank=True, null=False)
@@ -33,11 +33,11 @@ class Emprestimo(models.Model):
 
 
 class Livros(models.Model):
-    codigo = models.AutoField(db_column='Codigo', primary_key=True, blank=True, null=False)  # Field name made lowercase.
-    titulo = models.TextField(db_column='Titulo')  # Field name made lowercase.
-    autor = models.TextField(db_column='Autor')  # Field name made lowercase.
-    quantidade = models.IntegerField(db_column='Quantidade')  # Field name made lowercase.
-    genero = models.TextField(db_column='Genero')  # Field name made lowercase.
+    codigo = models.AutoField(db_column='Codigo', primary_key=True, blank=True, null=False)  
+    titulo = models.TextField(db_column='Titulo') 
+    autor = models.TextField(db_column='Autor')  
+    quantidade = models.IntegerField(db_column='Quantidade')  
+    genero = models.TextField(db_column='Genero') 
 
     class Meta:
         managed = False

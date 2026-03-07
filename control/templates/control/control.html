@@ -25,7 +25,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* ── Header ── */
     .header {
       background: var(--green); padding: 0 32px; height: 52px;
       display: flex; align-items: center; gap: 10px;
@@ -40,10 +39,8 @@
     }
     .header-nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
 
-    /* ── Container ── */
     .container { max-width: 1000px; margin: 40px auto; padding: 0 28px; }
 
-    /* ── Page header ── */
     .page-header {
       display: flex; align-items: center; gap: 10px;
       margin-bottom: 6px;
@@ -55,8 +52,7 @@
       color: var(--muted); font-size: 14px; margin-bottom: 32px;
       opacity: 0; animation: fadeUp .5s .18s forwards;
     }
-
-    /* ── Tabs ── */
+  
     .tabs {
       display: flex; border-bottom: 1px solid var(--border); margin-bottom: 36px;
       opacity: 0; animation: fadeUp .5s .25s forwards;
@@ -70,13 +66,11 @@
     .tab-btn:hover { color: var(--green); }
     .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
 
-    /* ── Section description ── */
     .section-desc {
       color: var(--muted); font-size: 14px; margin-bottom: 28px;
       opacity: 0; animation: fadeUp .5s .32s forwards;
     }
 
-    /* ── Action cards grid ── */
     .cards-grid {
       display: grid; gap: 20px;
       opacity: 0; animation: fadeUp .5s .38s forwards;
@@ -110,10 +104,8 @@
     .card-title { font-size: 15px; font-weight: 600; color: var(--text); }
     .card-desc  { font-size: 13px; color: var(--muted); }
 
-    /* ── Hidden ── */
     .hidden { display: none; }
 
-    /* ── Modal overlay ── */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(44,36,22,.45);
@@ -142,7 +134,6 @@
     .modal-close:hover { background: #ede8df; color: var(--text); }
     .modal-close svg { width: 18px; height: 18px; }
 
-    /* ── Form ── */
     .form-group { margin-bottom: 18px; }
     .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
     .form-group input, .form-group select {
@@ -172,7 +163,6 @@
     .btn-confirm.red { background: var(--red); }
     .btn-confirm.red:hover { background: #a93226; }
 
-    /* ── Toast ── */
     .toast {
       position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
       background: #2c2416; color: #fff; padding: 12px 22px; border-radius: 6px;
@@ -181,7 +171,6 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Animations ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -198,7 +187,7 @@
 </head>
 <body>
 
-  <!-- Header -->
+
   <header class="header">
     <span class="header-icon">|||</span>
     <h1>Codex</h1>
@@ -214,13 +203,11 @@
     </div>
     <p class="page-subtitle">Gerencie o acervo e os empréstimos da biblioteca.</p>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="acervo">Acervo</button>
       <button class="tab-btn" data-tab="emprestimos">Empréstimos</button>
     </div>
 
-    <!-- Acervo -->
     <div id="tab-acervo">
       <p class="section-desc">Gerencie o acervo da biblioteca através das ações abaixo.</p>
       <div class="cards-grid">
@@ -260,7 +247,6 @@
       </div>
     </div>
 
-    <!-- Empréstimos -->
     <div id="tab-emprestimos" class="hidden">
       <p class="section-desc">Registre empréstimos e devoluções através das ações abaixo.</p>
       <div class="cards-grid">
@@ -286,7 +272,6 @@
 
   </main>
 
-  <!-- ══ MODAL: Adicionar Livro ══ -->
   <div class="modal-overlay" id="modal-adicionar">
     <div class="modal">
       <div class="modal-header">
@@ -321,7 +306,6 @@
     </div>
   </div>
 
-  <!-- ══ MODAL: Editar Livro ══ -->
   <div class="modal-overlay" id="modal-editar">
     <div class="modal">
       <div class="modal-header">
@@ -360,7 +344,6 @@
     </div>
   </div>
 
-  <!-- ══ MODAL: Remover Livro ══ -->
   <div class="modal-overlay" id="modal-remover">
     <div class="modal">
       <div class="modal-header">
@@ -384,7 +367,6 @@
     </div>
   </div>
 
-  <!-- ══ MODAL: Cadastrar Cliente ══ -->
   <div class="modal-overlay" id="modal-cliente">
     <div class="modal">
       <div class="modal-header">
@@ -411,7 +393,6 @@
     </div>
   </div>
 
-  <!-- ══ MODAL: Novo Empréstimo ══ -->
   <div class="modal-overlay" id="modal-emprestimo">
     <div class="modal">
       <div class="modal-header">
@@ -446,7 +427,6 @@
     </div>
   </div>
 
-  <!-- ══ MODAL: Devolução ══ -->
   <div class="modal-overlay" id="modal-devolucao">
     <div class="modal">
       <div class="modal-header">
@@ -470,7 +450,6 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
