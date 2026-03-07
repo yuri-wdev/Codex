@@ -123,3 +123,14 @@ def devolver_emprestimo(request):
             messages.error(request, '❌ Empréstimo não encontrado.')
 
     return redirect('controle')
+
+@login_required
+def salvar_cliente(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        cpf = request.POST.get('cpf')
+
+        Cliente.objects.create(nome=nome, cpf=cpf)
+        messages.success(request, f'👤 Cliente "{nome}" cadastrado!')
+
+    return redirect('controle')

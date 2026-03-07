@@ -81,7 +81,7 @@
       display: grid; gap: 20px;
       opacity: 0; animation: fadeUp .5s .38s forwards;
     }
-    #tab-acervo   .cards-grid { grid-template-columns: repeat(3, 1fr); }
+    #tab-acervo      .cards-grid { grid-template-columns: repeat(4, 1fr); }
     #tab-emprestimos .cards-grid { grid-template-columns: repeat(2, 1fr); }
 
     .action-card {
@@ -187,9 +187,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 700px) {
-      #tab-acervo .cards-grid    { grid-template-columns: 1fr; }
+    @media (max-width: 860px) {
+      #tab-acervo .cards-grid      { grid-template-columns: repeat(2, 1fr); }
       #tab-emprestimos .cards-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      #tab-acervo .cards-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -207,8 +210,7 @@
   <main class="container">
 
     <div class="page-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <h2>Biblioteca</h2>
+      <h2>Operações</h2>
     </div>
     <p class="page-subtitle">Gerencie o acervo e os empréstimos da biblioteca.</p>
 
@@ -245,6 +247,14 @@
           </div>
           <span class="card-title">Remover Livro</span>
           <span class="card-desc">Excluir título do acervo</span>
+        </div>
+
+        <div class="action-card" onclick="openModal('modal-cliente')">
+          <div class="card-icon teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span class="card-title">Cadastrar Cliente</span>
+          <span class="card-desc">Registrar novo cliente</span>
         </div>
 
       </div>
@@ -324,7 +334,7 @@
         {% csrf_token %}
         <div class="form-group">
           <label>Código do Livro</label>
-          <input type="number" name="id_do_livro" id="edit-codigo" placeholder="Digite o código" required>
+          <input type="number" name="id_do_livro" placeholder="Digite o código" required>
         </div>
         <div class="form-group">
           <label>Novo Título</label>
@@ -374,6 +384,33 @@
     </div>
   </div>
 
+  <!-- ══ MODAL: Cadastrar Cliente ══ -->
+  <div class="modal-overlay" id="modal-cliente">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Cadastrar Cliente</span>
+        <button class="modal-close" onclick="closeModal('modal-cliente')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form method="POST" action="{% url 'salvar_cliente' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" name="nome" placeholder="Ex: João Silva" required>
+        </div>
+        <div class="form-group">
+          <label>CPF</label>
+          <input type="text" name="cpf" placeholder="Ex: 000.000.000-00" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-cliente')">Cancelar</button>
+          <button type="submit" class="btn-confirm">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ══ MODAL: Novo Empréstimo ══ -->
   <div class="modal-overlay" id="modal-emprestimo">
     <div class="modal">
@@ -387,7 +424,7 @@
         {% csrf_token %}
         <div class="form-group">
           <label>Código do Livro</label>
-          <input type="text" name="codigo_livro" placeholder="Ex: 978-0060883287" required>
+          <input type="text" name="codigo_livro" placeholder="Ex: 1" required>
         </div>
         <div class="form-group">
           <label>ID do Cliente</label>
@@ -452,14 +489,12 @@
     function openModal(id)  { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-    // Close on overlay click
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', e => {
         if (e.target === overlay) overlay.classList.remove('open');
       });
     });
 
-    // Close on Escape
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
