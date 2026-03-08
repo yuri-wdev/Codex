@@ -1,4 +1,4 @@
-# ProjetoFinal_Cepedi
+# Projeto Final: Codex
 
 ## Biblioteca Virtual
 
