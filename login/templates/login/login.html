@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Login - Codex</title>
+</head>
+
+<body>
+    <div class="login-container">
+        <h1>Codex</h1>
+        <p>Gerenciamento de empréstimos e acervo</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+
+            {% if erro %}
+                <p class="erro">{{ erro }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
